@@ -4,9 +4,38 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  --cat-success-bg: #dcfce7;
+  --cat-success-text: #166534;
+  --cat-success-border: #22c55e;
+  --cat-error-bg: #fee2e2;
+  --cat-error-text: #991b1b;
+  --cat-error-border: #ef4444;
+  
+  --cat-orange: #ff8c42;
+  --cat-red: #ff6b6b;
+  --cat-black: #000000;
+  --cat-white: #ffffff;
+  --cat-pink: #ffb3ba;
+  --cat-orange-dark: #ff6b00;
+  
+  --animation-fast: 150ms;
+  --animation-normal: 300ms;
+  --animation-slow: 500ms;
+  --sparkle-delay-step: 0.2s;
+  
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
 
-/* @theme is a Tailwind CSS v4 directive - this is valid CSS */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -17,6 +46,20 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    
+    --cat-success-bg: #14532d;
+    --cat-success-text: #86efac;
+    --cat-success-border: #22c55e;
+    --cat-error-bg: #7f1d1d;
+    --cat-error-text: #fca5a5;
+    --cat-error-border: #ef4444;
+    
+    --cat-orange: #ff8c42;
+    --cat-red: #ff6b6b;
+    --cat-black: #000000;
+    --cat-white: #ffffff;
+    --cat-pink: #ffb3ba;
+    --cat-orange-dark: #ff6b00;
   }
 }
 
@@ -30,4 +73,225 @@ body {
 
 .touch-manipulation {
   touch-action: manipulation;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+.cat-feedback-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  animation: catFadeIn var(--animation-normal) ease-out;
+}
+
+.cat-feedback-overlay[data-visible='false'] {
+  animation: catFadeOut var(--animation-normal) ease-in forwards;
+}
+
+.cat-feedback-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 9999;
+  width: 100%;
+  max-width: min(90%, 400px);
+  padding: var(--spacing-md);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: catSlideIn var(--animation-normal) ease-out;
+}
+
+.cat-feedback-container[data-visible='false'] {
+  animation: catSlideOut var(--animation-normal) ease-in forwards;
+}
+
+.cat-feedback-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  border: 2px solid;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 10px 10px -5px rgb(0 0 0 / 0.1);
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+}
+
+.cat-feedback-content[data-type='correct'] {
+  background-color: var(--cat-success-bg);
+  border-color: var(--cat-success-border);
+  color: var(--cat-success-text);
+}
+
+.cat-feedback-content[data-type='wrong'] {
+  background-color: var(--cat-error-bg);
+  border-color: var(--cat-error-border);
+  color: var(--cat-error-text);
+}
+
+.cat-svg-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+}
+
+.cute-cat-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.15));
+}
+
+.cute-cat-svg[data-type='correct'] {
+  animation: catBounceSuccess var(--animation-slow) ease-out;
+}
+
+.cute-cat-svg[data-type='wrong'] {
+  animation: catBounceError var(--animation-slow) ease-out;
+}
+
+.cat-sparkles {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  display: flex;
+  gap: 8px;
+  pointer-events: none;
+  font-size: 1.5rem;
+  transform: translateX(-50%);
+}
+
+.cat-sparkles span {
+  display: inline-block;
+  animation: catSparkle 1s ease-in-out infinite;
+}
+
+.cat-sparkles span:nth-child(1) {
+  animation-delay: calc(var(--sparkle-delay-step) * 0);
+}
+
+.cat-sparkles span:nth-child(2) {
+  animation-delay: calc(var(--sparkle-delay-step) * 1);
+}
+
+.cat-sparkles span:nth-child(3) {
+  animation-delay: calc(var(--sparkle-delay-step) * 2);
+}
+
+.cat-message {
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+@keyframes catFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes catFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes catSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes catSlideOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -55%) scale(0.9);
+  }
+}
+
+@keyframes catBounceSuccess {
+  0% {
+    transform: scale(0.3) rotate(-20deg);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.2) rotate(15deg);
+  }
+  40% {
+    transform: scale(0.9) rotate(-10deg);
+  }
+  60% {
+    transform: scale(1.1) rotate(8deg);
+  }
+  80% {
+    transform: scale(0.95) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes catBounceError {
+  0% {
+    transform: scale(0.5) rotate(10deg);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(1.1) rotate(-8deg);
+  }
+  60% {
+    transform: scale(0.95) rotate(3deg);
+  }
+  80% {
+    transform: scale(1.05) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes catSparkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3) rotate(180deg);
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-feedback-overlay,
+  .cat-feedback-container,
+  .cat-sparkles,
+  .cute-cat-svg {
+    animation: none;
+  }
 }
