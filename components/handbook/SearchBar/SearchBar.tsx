@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { SEARCH } from '@/constants';
 import { isValidString } from '@/utils/validation';
 
@@ -29,16 +29,27 @@ export function SearchBar({
     [onSearch]
   );
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const newQuery = event.target.value;
-    setSearchQuery(newQuery);
-    
-    if (isValidString(newQuery) && newQuery.length >= SEARCH.minQueryLength) {
-      debouncedSearch(newQuery);
-    } else if (newQuery.length === 0) {
-      onSearch('');
-    }
-  };
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current !== null) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      const newQuery = event.target.value;
+      setSearchQuery(newQuery);
+      
+      if (isValidString(newQuery) && newQuery.length >= SEARCH.minQueryLength) {
+        debouncedSearch(newQuery);
+      } else if (newQuery.length === 0) {
+        onSearch('');
+      }
+    },
+    [debouncedSearch, onSearch]
+  );
 
   return (
     <div className={`relative ${className}`}>

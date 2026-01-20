@@ -1,3 +1,5 @@
+import { memo, useCallback } from 'react';
+
 interface CardProps {
   readonly children: React.ReactNode;
   readonly className?: string;
@@ -6,7 +8,7 @@ interface CardProps {
   readonly isInteractive?: boolean;
 }
 
-export function Card({
+function CardComponent({
   children,
   className = '',
   onClick,
@@ -17,6 +19,16 @@ export function Card({
   const interactiveClasses = isInteractive ? 'cursor-pointer hover:shadow-lg transition-shadow duration-200' : '';
   const combinedClasses = `${baseClasses} ${interactiveClasses} ${className}`.trim();
 
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (isInteractive && onClick && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        onClick(event as unknown as React.MouseEvent);
+      }
+    },
+    [isInteractive, onClick]
+  );
+
   return (
     <div
       className={combinedClasses}
@@ -24,14 +36,11 @@ export function Card({
       onMouseDown={onMouseDown}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
-      onKeyDown={(event) => {
-        if (isInteractive && onClick && (event.key === 'Enter' || event.key === ' ')) {
-          event.preventDefault();
-          onClick(event as unknown as React.MouseEvent);
-        }
-      }}
+      onKeyDown={handleKeyDown}
     >
       {children}
     </div>
   );
 }
+
+export const Card = memo(CardComponent);

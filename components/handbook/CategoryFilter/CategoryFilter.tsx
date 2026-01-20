@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { CategoryType } from '@/types';
 import { CATEGORY_TYPES, CATEGORY_ORDER } from '@/constants/categories';
 
@@ -6,7 +7,7 @@ interface CategoryFilterProps {
   readonly onCategoryChange: (category: CategoryType | 'all') => void;
 }
 
-export function CategoryFilter({
+function CategoryFilterComponent({
   selectedCategory,
   onCategoryChange,
 }: CategoryFilterProps) {
@@ -25,6 +26,7 @@ export function CategoryFilter({
       {CATEGORY_ORDER.map((categoryType) => {
         const category = CATEGORY_TYPES[categoryType];
         const isSelected = selectedCategory === categoryType;
+        
         return (
           <button
             key={categoryType}
@@ -42,3 +44,5 @@ export function CategoryFilter({
     </div>
   );
 }
+
+export const CategoryFilter = memo(CategoryFilterComponent);

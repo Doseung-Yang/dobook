@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { memo, useRef, useCallback } from 'react';
 import type { QuestionAnswerItem } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { CATEGORY_TYPES } from '@/constants/categories';
@@ -7,23 +7,22 @@ import { formatAnswerText } from '@/utils/formatAnswer';
 interface QuestionAnswerProps {
   readonly item: QuestionAnswerItem;
   readonly isExpanded?: boolean;
-  readonly onToggle?: () => void;
+  readonly onToggleItem?: (itemId: string) => void;
 }
 
-export function QuestionAnswer({
+function QuestionAnswerComponent({
   item,
   isExpanded = false,
-  onToggle,
+  onToggleItem,
 }: QuestionAnswerProps) {
-  const formattedAnswer = useMemo(() => formatAnswerText(item.answer), [item.answer]);
   const mouseDownRef = useRef<{ x: number; y: number } | null>(null);
 
-  const handleMouseDown = (event: React.MouseEvent): void => {
+  const handleMouseDown = useCallback((event: React.MouseEvent): void => {
     mouseDownRef.current = { x: event.clientX, y: event.clientY };
-  };
+  }, []);
 
-  const handleClick = (event: React.MouseEvent): void => {
-    if (!onToggle) {
+  const handleClick = useCallback((event: React.MouseEvent): void => {
+    if (!onToggleItem) {
       return;
     }
 
@@ -46,8 +45,8 @@ export function QuestionAnswer({
       return;
     }
 
-    onToggle();
-  };
+    onToggleItem(item.id);
+  }, [onToggleItem, item.id]);
 
   return (
     <Card
@@ -62,6 +61,7 @@ export function QuestionAnswer({
             {item.question}
           </h3>
           <button
+            onClick={onToggleItem ? () => onToggleItem(item.id) : undefined}
             className="flex-shrink-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-1 touch-manipulation"
             aria-label={isExpanded ? '답변 접기' : '답변 펼치기'}
             aria-expanded={isExpanded}
@@ -85,7 +85,7 @@ export function QuestionAnswer({
         {isExpanded && (
           <div className="pt-3 md:pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="space-y-2.5 md:space-y-3">
-              {formattedAnswer.map((segment, index) => {
+              {formatAnswerText(item.answer).map((segment, index) => {
                 if (segment.type === 'list' && segment.items) {
                   return (
                     <ul
@@ -133,3 +133,5 @@ export function QuestionAnswer({
     </Card>
   );
 }
+
+export const QuestionAnswer = memo(QuestionAnswerComponent);

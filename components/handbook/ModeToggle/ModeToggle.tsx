@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { ViewMode } from '@/types';
 
 interface ModeToggleProps {
@@ -5,7 +6,7 @@ interface ModeToggleProps {
   readonly onModeChange: (mode: ViewMode) => void;
 }
 
-export function ModeToggle({ currentMode, onModeChange }: ModeToggleProps) {
+function ModeToggleComponent({ currentMode, onModeChange }: ModeToggleProps) {
   return (
     <div className="flex bg-gray-200 dark:bg-gray-700 rounded-lg p-1 mb-4 md:mb-6">
       <button
@@ -31,3 +32,5 @@ export function ModeToggle({ currentMode, onModeChange }: ModeToggleProps) {
     </div>
   );
 }
+
+export const ModeToggle = memo(ModeToggleComponent);

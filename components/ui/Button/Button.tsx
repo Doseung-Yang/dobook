@@ -23,22 +23,15 @@ export function Button({
   className = '',
   ariaLabel,
 }: ButtonProps) {
-  const getSizeClasses = (): string => {
-    const sizeMap: Record<ComponentSize, string> = {
-      small: 'px-4 py-2 text-sm',
-      medium: 'px-6 py-3 text-base',
-      large: 'px-8 py-4 text-lg',
-    };
-    return sizeMap[size];
-  };
-
-  const getVariantClasses = (): string => {
-    return `${COMPONENT_VARIANTS[variant].bg} ${COMPONENT_VARIANTS[variant].text} ${COMPONENT_VARIANTS[variant].border}`;
+  const sizeMap: Record<ComponentSize, string> = {
+    small: 'px-4 py-2 text-sm',
+    medium: 'px-6 py-3 text-base',
+    large: 'px-8 py-4 text-lg',
   };
 
   const baseClasses = 'rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
-  const sizeClasses = getSizeClasses();
-  const variantClasses = getVariantClasses();
+  const sizeClasses = sizeMap[size];
+  const variantClasses = `${COMPONENT_VARIANTS[variant].bg} ${COMPONENT_VARIANTS[variant].text} ${COMPONENT_VARIANTS[variant].border}`;
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90 active:opacity-75';
   
   const combinedClasses = `${baseClasses} ${sizeClasses} ${variantClasses} ${disabledClasses} ${className}`.trim();

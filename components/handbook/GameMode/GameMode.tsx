@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react';
 import type { GameQuestion, QuestionAnswerItem, GameStats } from '@/types';
 import { generateGameQuestions } from '@/utils/game';
 import { Card } from '@/components/ui/Card';
+import { CatFeedback } from '@/components/ui/CatFeedback';
+import { Button } from '@/components/ui/Button';
 
 interface GameModeProps {
   readonly items: readonly QuestionAnswerItem[];
@@ -99,9 +101,16 @@ export function GameMode({ items, onBack }: GameModeProps) {
     );
   }
 
-  const currentQuestion = gameQuestions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === gameQuestions.length - 1;
   const progress = ((currentQuestionIndex + 1) / gameQuestions.length) * 100;
+  const currentQuestion = gameQuestions[currentQuestionIndex];
+  
+  const feedbackType: 'correct' | 'wrong' | null = 
+    !showResult || selectedAnswerIndex === null
+      ? null
+      : selectedAnswerIndex === currentQuestion.correctAnswerIndex
+        ? 'correct'
+        : 'wrong';
 
   return (
     <div className="space-y-6">
@@ -136,6 +145,8 @@ export function GameMode({ items, onBack }: GameModeProps) {
         </div>
       </div>
 
+      {feedbackType !== null && <CatFeedback key={`${feedbackType}-${currentQuestionIndex}`} type={feedbackType} />}
+
       <Card className="mb-4 md:mb-6">
         <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 md:mb-6">
           {currentQuestion.question}
@@ -148,8 +159,9 @@ export function GameMode({ items, onBack }: GameModeProps) {
             const showCorrect = showResult && isCorrect;
             const showWrong = showResult && isSelected && !isCorrect;
 
-            let buttonClasses =
-              'w-full text-left px-3 md:px-4 py-3 md:py-3.5 text-sm md:text-base rounded-lg font-medium transition-all border-2 touch-manipulation ';
+            const baseClasses = 'w-full text-left px-3 md:px-4 py-3 md:py-3.5 text-sm md:text-base rounded-lg font-medium transition-all border-2 touch-manipulation ';
+            let buttonClasses = baseClasses;
+            
             if (showResult) {
               if (showCorrect) {
                 buttonClasses += 'bg-green-100 dark:bg-green-900 border-green-500 text-green-800 dark:text-green-200';
@@ -159,8 +171,7 @@ export function GameMode({ items, onBack }: GameModeProps) {
                 buttonClasses += 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400';
               }
             } else {
-              buttonClasses +=
-                'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 active:border-blue-500 active:bg-blue-50 dark:active:bg-blue-900';
+              buttonClasses += 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 active:border-blue-500 active:bg-blue-50 dark:active:bg-blue-900';
             }
 
             return (
@@ -184,12 +195,14 @@ export function GameMode({ items, onBack }: GameModeProps) {
       {showResult && (
         <div className="flex gap-3">
           {!isLastQuestion ? (
-            <button
+            <Button
               onClick={handleNextQuestion}
-              className="flex-1 px-4 md:px-6 py-3 md:py-3.5 text-sm md:text-base bg-blue-600 text-white rounded-lg font-medium active:bg-blue-700 transition-colors touch-manipulation"
+              size="medium"
+              variant="primary"
+              className="flex-1 touch-manipulation"
             >
               다음 문제
-            </button>
+            </Button>
           ) : (
             <div className="flex-1 space-y-3">
               <Card className="text-center">
@@ -199,12 +212,14 @@ export function GameMode({ items, onBack }: GameModeProps) {
                 <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4">
                   정답률: {Math.round((stats.correctAnswers / stats.totalQuestions) * 100)}%
                 </p>
-                <button
+                <Button
                   onClick={handleRestart}
-                  className="px-4 md:px-6 py-2 md:py-2.5 text-sm md:text-base bg-blue-600 text-white rounded-lg font-medium active:bg-blue-700 transition-colors touch-manipulation"
+                  size="medium"
+                  variant="primary"
+                  className="touch-manipulation"
                 >
                   다시 시작
-                </button>
+                </Button>
               </Card>
             </div>
           )}
