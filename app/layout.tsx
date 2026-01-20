@@ -101,9 +101,6 @@ export const metadata: Metadata = {
     apple: "/dobook.png",
   },
   manifest: "/manifest.json",
-  verification: {
-    // google: "your-google-verification-code",
-  },
   other: {
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
