@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, Suspense, lazy } from 'react';
+import { useState, useMemo, useCallback, Suspense, lazy } from 'react';
 import { skillsHandbookConfig } from '@/data/skills';
 import { QuestionAnswer } from '@/components/handbook/QuestionAnswer';
 import { SearchBar } from '@/components/handbook/SearchBar';
@@ -32,7 +32,7 @@ export default function Home() {
     return items;
   }, [searchQuery, selectedCategory]);
 
-  const handleToggleItem = (itemId: string): void => {
+  const handleToggleItem = useCallback((itemId: string): void => {
     setExpandedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
@@ -42,7 +42,9 @@ export default function Home() {
       }
       return newSet;
     });
-  };
+  }, []);
+
+  const gameModeKey = filteredItems.map((item) => item.id).join(',');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-8">
@@ -61,7 +63,7 @@ export default function Home() {
         {viewMode === 'game' ? (
           <Suspense fallback={<div className="text-center py-12 text-gray-500 dark:text-gray-400">게임 모드 로딩 중...</div>}>
             <GameMode
-              key={filteredItems.map((item) => item.id).join(',')}
+              key={gameModeKey}
               items={filteredItems}
               onBack={() => setViewMode('study')}
             />
@@ -91,7 +93,7 @@ export default function Home() {
                     key={item.id}
                     item={item}
                     isExpanded={expandedItems.has(item.id)}
-                    onToggle={() => handleToggleItem(item.id)}
+                    onToggleItem={handleToggleItem}
                   />
                 ))
               ) : (
