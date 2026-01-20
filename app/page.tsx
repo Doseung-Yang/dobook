@@ -47,13 +47,14 @@ export default function Home() {
   const gameModeKey = filteredItems.map((item) => item.id).join(',');
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-8">
-      <div className="container mx-auto px-4 py-4 md:py-8 max-w-4xl">
-        <header className="mb-6 md:mb-8">
+    <>
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-8">
+        <div className="container mx-auto px-4 py-4 md:py-8 max-w-4xl">
+          <header className="mb-6 md:mb-8">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             {skillsHandbookConfig.title}
           </h1>
-          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400" role="doc-subtitle">
             {skillsHandbookConfig.description}
           </p>
         </header>
@@ -104,8 +105,9 @@ export default function Home() {
             </div>
           </>
         )}
-      </div>
-      <ScrollToTop />
-    </div>
+        </div>
+        <ScrollToTop />
+      </main>
+    </>
   );
 }
