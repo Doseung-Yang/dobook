@@ -1,4 +1,4 @@
-export type CategoryType = 'cs-knowledge' | 'assignment';
+export type CategoryType = 'cs-knowledge' | 'assignment' | 'os';
 
 export interface QuestionAnswerItem {
   readonly id: string;

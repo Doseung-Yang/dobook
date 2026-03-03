@@ -6,6 +6,11 @@ export const CATEGORY_TYPES: Record<CategoryType, Category> = {
     name: 'CS 지식',
     description: '컴퓨터 과학 기초 지식',
   },
+  os: {
+    id: 'os',
+    name: 'OS',
+    description: '운영체제 및 시스템',
+  },
   assignment: {
     id: 'assignment',
     name: '과제 풀이',
@@ -13,4 +18,4 @@ export const CATEGORY_TYPES: Record<CategoryType, Category> = {
   },
 } as const;
 
-export const CATEGORY_ORDER: readonly CategoryType[] = ['cs-knowledge', 'assignment'] as const;
+export const CATEGORY_ORDER: readonly CategoryType[] = ['cs-knowledge', 'os', 'assignment'] as const;
