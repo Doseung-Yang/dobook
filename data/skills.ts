@@ -1408,6 +1408,175 @@ const items: readonly QuestionAnswerItem[] = [
     createdAt: '2024-01-01',
     updatedAt: '2024-01-01',
   },
+  {
+    id: 'front-ssr-ssg-1',
+    question: 'SSR과 SSG의 차이를 기술적으로 설명해 주세요.',
+    answer: `SSR은 요청이 들어올 때마다 서버에서 React를 실행해서 HTML을 생성하는 방식입니다. 요청 시점의 데이터를 반영할 수 있어 항상 최신 상태를 보여주기 좋습니다.
+
+다만 요청마다 서버 렌더링 비용이 발생하므로 트래픽이 많아지면 서버 부하와 응답 지연이 커질 수 있습니다.
+
+반면 SSG는 빌드 시점에 HTML을 미리 생성해 두는 방식입니다. 요청이 들어오면 서버가 렌더링하지 않고 정적인 HTML 파일을 바로 전달하므로 응답 속도가 가장 빠르고 서버 비용도 낮습니다.
+
+하지만 데이터가 바뀌면 다시 빌드해야 한다는 한계가 있습니다.
+
+실무에서는 보통 다음처럼 혼합 전략을 사용합니다.
+- 마케팅 페이지: SSG
+- 상품 상세 페이지: ISR
+- 사용자 개인화 페이지: SSR`,
+    categoryType: 'front',
+    tags: ['SSR', 'SSG', 'ISR', '렌더링 전략'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-ssr-performance-1',
+    question: 'SSR의 성능 문제를 어떻게 해결할 수 있을까요?',
+    answer: `SSR의 가장 큰 문제는 서버 CPU 비용과 TTFB(Time To First Byte)입니다. 요청마다 HTML을 생성해야 하기 때문에 트래픽이 커질수록 부담이 커집니다.
+
+주로 다음 세 가지 방법을 사용합니다.
+- Streaming SSR: React 18에서는 HTML을 한 번에 보내지 않고 부분적으로 스트리밍해서 먼저 화면을 보여줄 수 있습니다.
+- 캐싱: CDN이나 Edge 캐시를 활용해 SSR 결과를 캐싱합니다.
+- ISR 사용: SSR 대신 Incremental Static Regeneration을 사용하면 트래픽이 많은 페이지를 정적 페이지처럼 운영할 수 있습니다.`,
+    categoryType: 'front',
+    tags: ['SSR', 'Streaming SSR', 'TTFB', '캐싱'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-reconciliation-1',
+    question: 'React Reconciliation 알고리즘을 설명해 주세요.',
+    answer: `React는 상태가 변경되면 새로운 Virtual DOM을 생성하고, 이전 Virtual DOM과 비교해서 변경된 부분만 실제 DOM에 반영합니다. 이 과정을 Reconciliation이라고 합니다.
+
+React는 비교 성능을 위해 두 가지 가정을 사용합니다.
+- 서로 다른 타입의 element는 완전히 다른 트리라고 가정합니다.
+- key를 통해 리스트 요소를 식별합니다.
+
+그래서 key가 잘못되면 불필요한 DOM 재생성이 발생할 수 있습니다.`,
+    categoryType: 'front',
+    tags: ['React', 'Reconciliation', 'Virtual DOM'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-key-importance-1',
+    question: 'React에서 key가 중요한 이유는 무엇인가요?',
+    answer: `React는 리스트 diffing에서 index 기반 비교 대신 key 기반 비교를 사용합니다. key가 없거나 index를 사용하면 요소 재사용이 깨지고 불필요한 DOM 업데이트가 발생할 수 있습니다.
+
+예를 들어 리스트 중간에 요소가 삽입되면 index key는 뒤에 있는 요소들까지 전부 바뀐 것으로 해석될 수 있습니다. 그래서 항상 stable unique key를 사용하는 것이 중요합니다.`,
+    categoryType: 'front',
+    tags: ['React', 'key', 'diffing', '리스트'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-rn-bridge-bottleneck-1',
+    question: 'React Native Bridge 구조의 병목 원인은 무엇인가요?',
+    answer: `React Native Bridge는 JS Thread와 Native Thread가 메시지를 통해 통신하는 구조입니다. 이때 메시지는 직렬화된 형태로 전달되기 때문에 비용이 발생합니다.
+
+대표적인 병목 원인은 다음과 같습니다.
+- 직렬화 비용
+- 비동기 메시지 큐 처리
+- 대량 UI 업데이트 시 Bridge 병목
+
+특히 애니메이션이나 스크롤이 많은 화면에서는 Bridge 트래픽이 증가하면서 성능 문제가 발생합니다.`,
+    categoryType: 'front',
+    tags: ['React Native', 'Bridge', '성능', 'Thread'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-rn-new-architecture-1',
+    question: 'React Native New Architecture의 핵심은 무엇인가요?',
+    answer: `핵심은 Bridge 제거입니다. New Architecture는 JSI(JavaScript Interface) 기반으로 JS와 Native가 직접 메모리를 공유하면서 호출하는 구조입니다.
+
+이로 인해 다음과 같은 효과가 있습니다.
+- 직렬화 비용 제거
+- 동기 호출 가능
+- 성능 개선
+
+또한 구조도 다음처럼 변경되었습니다.
+- Fabric: 새로운 렌더러
+- TurboModules: Lazy loading Native modules`,
+    categoryType: 'front',
+    tags: ['React Native', 'JSI', 'Fabric', 'TurboModules'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-webview-bridge-1',
+    question: 'WebView 브릿지 통신에서 설계 시 고려해야 할 문제는 무엇인가요?',
+    answer: `실무에서는 세 가지를 가장 중요하게 봅니다.
+
+- 보안: 외부 JS가 브릿지를 호출할 수 있기 때문에 origin validation을 해야 합니다.
+- 메시지 포맷: 브릿지는 보통 RPC 형태로 설계합니다.
+- 비동기 응답 처리: postMessage는 비동기이기 때문에 requestId 기반으로 응답 매칭을 처리합니다.
+
+예를 들면 다음과 같은 형태를 사용할 수 있습니다.
+{
+  type: "getUser",
+  payload: {}
+}`,
+    categoryType: 'front',
+    tags: ['WebView', 'Bridge', '보안', 'postMessage'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-mobile-web-performance-1',
+    question: '모바일 웹에서 성능이 느린 원인은 무엇인가요?',
+    answer: `주로 세 가지가 원인입니다.
+
+- JS 번들 크기: 모바일 CPU가 느리기 때문에 JavaScript parsing 비용이 큽니다.
+- Layout thrashing: DOM read/write가 반복되면 reflow가 발생합니다.
+- 이미지 리소스: 큰 이미지가 많으면 렌더링 성능이 떨어집니다.
+
+그래서 보통 다음 최적화를 적용합니다.
+- Code splitting
+- Lazy loading
+- Image optimization`,
+    categoryType: 'front',
+    tags: ['모바일 웹', '성능', '번들', '이미지 최적화'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-browser-rendering-pipeline-1',
+    question: '브라우저 렌더링 파이프라인을 설명해 주세요.',
+    answer: `브라우저 렌더링은 다음 순서로 진행됩니다.
+
+1. HTML 파싱 후 DOM 생성
+2. CSS 파싱 후 CSSOM 생성
+3. DOM과 CSSOM을 결합해 Render Tree 생성
+4. Layout 계산
+5. Paint
+6. Composite
+
+이 과정을 Critical Rendering Path라고 합니다.`,
+    categoryType: 'front',
+    tags: ['브라우저', '렌더링', 'Critical Rendering Path'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
+  {
+    id: 'front-state-management-scope-1',
+    question: 'React에서 상태 관리를 어디까지 전역으로 올리는 것이 좋을까요?',
+    answer: `기준은 상태의 사용 범위입니다.
+
+- 특정 컴포넌트에서만 사용하는 상태: local state
+- 여러 컴포넌트가 공유하는 상태: global state
+
+하지만 전역 상태가 많아지면 렌더링 범위가 커지고 유지보수가 어려워집니다. 그래서 저는 보통 상태를 역할별로 분리합니다.
+
+- 서버 상태: React Query
+- 전역 UI 상태: Zustand
+- 컴포넌트 내부 상태: useState
+
+이렇게 분리하면 상태 책임이 명확해지고 유지보수가 쉬워집니다.`,
+    categoryType: 'front',
+    tags: ['React', '상태 관리', 'React Query', 'Zustand'],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
+  },
 ] as const;
 
 export const skillsHandbookConfig: HandbookConfig = {

@@ -16,6 +16,11 @@ export const CATEGORY_TYPES: Record<CategoryType, Category> = {
     name: '과제 풀이',
     description: '과제 해결 방법과 풀이',
   },
+  front: {
+    id: 'front',
+    name: 'Front',
+    description: '프론트엔드 렌더링과 아키텍처',
+  },
 } as const;
 
-export const CATEGORY_ORDER: readonly CategoryType[] = ['cs-knowledge', 'os', 'assignment'] as const;
+export const CATEGORY_ORDER: readonly CategoryType[] = ['cs-knowledge', 'os', 'assignment', 'front'] as const;
